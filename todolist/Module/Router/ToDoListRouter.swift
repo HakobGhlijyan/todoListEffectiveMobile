@@ -8,11 +8,17 @@
 import SwiftUI
 
 final class ToDoListRouter {
-    func navigateToAddToDo(completion: @escaping (ToDo) -> Void) {
-        let newToDo = ToDoInputView { title in
-            completion(ToDo(title: title))
+    func navigateToAddToDo(completion: @escaping (String) -> Void) {
+        let newToDoInputView = ToDoInputView { title in
+            completion(title) // Передаем только текст, создание объекта произойдет в Interactor
         }
-        let hostingController = UIHostingController(rootView: newToDo)
-        UIApplication.shared.windows.first?.rootViewController?.present(hostingController, animated: true)
+        let hostingController = UIHostingController(rootView: newToDoInputView)
+
+        // Получаем текущий rootViewController для презентации
+        if let rootViewController = UIApplication.shared.connectedScenes
+            .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController })
+            .first {
+            rootViewController.present(hostingController, animated: true)
+        }
     }
 }
