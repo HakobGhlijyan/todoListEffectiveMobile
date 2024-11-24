@@ -5,27 +5,6 @@
 //  Created by Hakob Ghlijyan on 19.11.2024.
 //
 
-//1
-/*
- import Foundation
-
- final class ToDoListInteractor {
-     private var todos: [ToDo] = []
-
-     func fetchToDos() -> [ToDo] {
-         return todos
-     }
-
-     func addToDo(_ todo: ToDo) {
-         todos.append(todo)
-     }
-
-     func deleteToDo(at index: Int) {
-         todos.remove(at: index)
-     }
- }
- */
-
 import CoreData
 
 final class ToDoListInteractor {
@@ -53,16 +32,26 @@ final class ToDoListInteractor {
         }
     }
     
-    func addToDo(_ title: String) {
+//    func addToDo(_ title: String) {
+//        let newToDo = ToDo(context: context)
+//        newToDo.id = UUID()
+//        newToDo.title = title
+//        newToDo.isCompleted = false
+//        newToDo.dateCreated = Date()
+//
+//        saveContext()
+//    }
+    
+    func addToDo(title: String, description: String) {
         let newToDo = ToDo(context: context)
         newToDo.id = UUID()
         newToDo.title = title
+        newToDo.descriptionText = description
         newToDo.isCompleted = false
         newToDo.dateCreated = Date()
 
         saveContext()
     }
-    
     
     func deleteToDo(_ todo: ToDo) {
         context.delete(todo)

@@ -9,28 +9,65 @@ import SwiftUI
 
 struct ToDoListView: View {
     @ObservedObject var presenter: ToDoListPresenter
+    @State private var searchText: String = ""
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(presenter.todos, id: \.id) { todo in
-                    HStack {
-                        Text(todo.title ?? "Untitled")
-                        Spacer()
-                        Button(action: {
-                            presenter.toggleCompletion(for: todo)
-                        }) {
-                            Image(systemName: todo.isCompleted ? "checkmark.circle.fill" : "circle")
-                        }
+            ScrollView {
+                if presenter.todos.isEmpty {
+                    ContentUnavailableView(
+                        "Your Task",
+                        systemImage: "list.bullet.clipboard",
+                        description: Text(
+                            "Please Add new task"
+                        )
+                    )
+                } else {
+                    ForEach(presenter.todos, id: \.id) { todo in
+                        ToDoItemRow(todo: todo)
+                            .onTapGesture {
+                                presenter.toggleCompletion(for: todo)
+                            }
+                            .contextMenu {
+                                VStack {
+                                    Button {
+                                        print("Редактировать")
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "highlighter")
+                                            Text("Редактировать")
+                                        }
+                                    }
+                                    Button {
+                                        print("Поделиться")
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "square.and.arrow.up")
+                                            Text("Поделиться")
+                                        }
+                                    }
+                                    Button(role: .destructive) {
+                                        presenter.delete(todo: todo)
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "trash")
+                                            Text("Удалить")
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                    .onDelete { indexSet in
+                        presenter.delete(at: indexSet)
                     }
                 }
-                .onDelete { indexSet in
-                    presenter.delete(at: indexSet)
-                }
             }
-            .navigationTitle("To-Do List")
+            .listStyle(.plain)
+            .navigationTitle("Задачи")
+            .toolbarBackground(.visible, for: .bottomBar)
+            .toolbarBackground(.ultraThickMaterial, for: .bottomBar)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .bottomBar) {
                     Menu {
                         Button("Show All") {
                             presenter.changeFilterOption(to: .all)
@@ -45,14 +82,60 @@ struct ToDoListView: View {
                         Image(systemName: "line.horizontal.3.decrease.circle")
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .status) {
+                    Text("\(presenter.todos.count) Задач")
+                }
+                ToolbarItem(placement: .bottomBar) {
                     Button(action: {
                         presenter.addToDo()
                     }) {
-                        Image(systemName: "plus")
+                        Image(systemName: "square.and.pencil")
                     }
                 }
             }
+            .searchable(text: $searchText)
         }
     }
+    
+    @ViewBuilder func ToDoItemRow(todo: ToDo) -> some View {
+        VStack(spacing: 0.0) {
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: todo.isCompleted ? "checkmark.circle" : "circle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 48)
+                    .foregroundStyle(todo.isCompleted ? Color.accentColor : Color.primary)
+                
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(todo.title ?? "Your title")
+                        .font(.headline)
+                        .foregroundStyle(todo.isCompleted ? .secondary : .primary)
+                        .strikethrough(todo.isCompleted ? true : false)
+                    
+                    Text(todo.descriptionText ?? " Your descriprion text")
+                        .font(.subheadline)
+                        .foregroundStyle(todo.isCompleted ? .secondary : .primary)
+                    
+                    Text("Создана: \(todo.dateCreated ?? Date(), formatter: itemFormatter)")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
+                }
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+            }
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Divider()
+                .padding(.horizontal, 20)
+        }
+    }
+
+}
+
+
+#Preview {
+    Main()
+//        .preferredColorScheme(.dark)
 }

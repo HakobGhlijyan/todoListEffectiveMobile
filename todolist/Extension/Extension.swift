@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+// Форматтер для отображения даты
+let itemFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .short
+    formatter.timeStyle = .short
+    return formatter
+}()

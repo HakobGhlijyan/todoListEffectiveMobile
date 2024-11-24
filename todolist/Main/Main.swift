@@ -9,7 +9,8 @@ import SwiftUI
 
 struct Main: View {
     var body: some View {
-        ToDoListModule.build()
+        ToDoListModule
+            .build()
     }
 }
 

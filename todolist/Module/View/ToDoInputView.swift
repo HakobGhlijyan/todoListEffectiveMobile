@@ -10,20 +10,37 @@ import SwiftUI
 struct ToDoInputView: View {
     @Environment(\.dismiss) var dismiss
     @State private var title: String = ""
-    var onSave: (String) -> Void
-
+    @State private var description: String = ""
+    @State private var dueDate: Date = Date()
+    @State private var showAlert: Bool = false
+    var onSave: (String, String) -> Void
+    
     var body: some View {
         NavigationView {
             Form {
-                TextField("Task Title", text: $title)
+                Section(header: Text("Title")) {
+                    TextField("Enter title", text: $title)
+                }
+                Section(header: Text("Description")) {
+                    TextField("Enter description", text: $description)
+                }
+                Section(header: Text("Date")) {
+                    DatePicker("Date", selection: $dueDate)
+                        .datePickerStyle(.graphical)
+                }
+                
             }
-            .navigationTitle("New Task")
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Error"), message: Text("Please fill all fields and select due date that is today or newer."))
+            }
+            .navigationBarTitle("Add New ToDo", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(title)
+                        onSave(title, description)
                         dismiss()
                     }
+                    .disabled(title.isEmpty || description.isEmpty)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -33,4 +50,8 @@ struct ToDoInputView: View {
             }
         }
     }
+}
+
+#Preview {
+    Main()
 }

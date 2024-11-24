@@ -7,37 +7,6 @@
 
 import Foundation
 
-/*
- final class ToDoListPresenter: ObservableObject {
-     @Published var todos: [ToDo] = []
-     private let interactor: ToDoListInteractor
-     private let router: ToDoListRouter
-
-     init(interactor: ToDoListInteractor, router: ToDoListRouter) {
-         self.interactor = interactor
-         self.router = router
-         fetchToDos()
-     }
-
-     func fetchToDos() {
-         todos = interactor.fetchToDos()
-     }
-
-     func addToDo() {
-         router.navigateToAddToDo { [weak self] newToDo in
-             self?.interactor.addToDo(newToDo)
-             self?.fetchToDos()
-         }
-     }
-
-     func delete(at indexSet: IndexSet) {
-         guard let index = indexSet.first else { return }
-         interactor.deleteToDo(at: index)
-         fetchToDos()
-     }
- }
- */
-
 enum FilterOption {
     case all
     case completed
@@ -65,9 +34,16 @@ final class ToDoListPresenter: ObservableObject {
         fetchToDos() // Перезагружаем задачи с новым фильтром
     }
 
+//    func addToDo() {
+//        router.navigateToAddToDo { [weak self] title in
+//            self?.interactor.addToDo(title)
+//            self?.fetchToDos()
+//        }
+//    }
+    
     func addToDo() {
-        router.navigateToAddToDo { [weak self] title in
-            self?.interactor.addToDo(title)
+        router.navigateToAddToDo { [weak self] title, description in
+            self?.interactor.addToDo(title: title, description: description)
             self?.fetchToDos()
         }
     }
@@ -78,9 +54,39 @@ final class ToDoListPresenter: ObservableObject {
         }
         fetchToDos()
     }
+    
+    func delete(todo: ToDo) {
+        interactor.deleteToDo(todo) // Удаляем элемент через Interactor
+        fetchToDos() // Обновляем список задач
+    }
 
     func toggleCompletion(for todo: ToDo) {
         interactor.toggleCompletion(for: todo)
         fetchToDos()
     }
 }
+
+
+/*
+ 
+ func delete(todo: ToDo) {
+     interactor.deleteToDo(todo) // Удаляем элемент через Interactor
+     fetchToDos() // Обновляем список задач
+ }
+ 
+ List {
+     ForEach(presenter.todos, id: \.id) { todo in
+         HStack {
+             Text(todo.title ?? "Untitled")
+             Spacer()
+             Button(action: {
+                 presenter.delete(todo: todo) // Передаем объект для удаления
+             }) {
+                 Image(systemName: "trash")
+                     .foregroundColor(.red)
+             }
+         }
+     }
+ }
+ 
+ */
