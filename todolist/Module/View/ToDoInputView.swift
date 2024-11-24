@@ -59,7 +59,6 @@ struct ToDoInputView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-//                        onSave(title, description, priority, dueDate)
                         onSave(title, description, includePriority ? priority : 0, includeDueDate ? dueDate : nil)
                         dismiss()
                     }

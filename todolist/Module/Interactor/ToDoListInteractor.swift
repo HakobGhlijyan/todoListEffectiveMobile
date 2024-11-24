@@ -32,27 +32,6 @@ final class ToDoListInteractor {
         }
     }
     
-//    func addToDo(_ title: String) {
-//        let newToDo = ToDo(context: context)
-//        newToDo.id = UUID()
-//        newToDo.title = title
-//        newToDo.isCompleted = false
-//        newToDo.dateCreated = Date()
-//
-//        saveContext()
-//    }
-    
-//    func addToDo(title: String, description: String) {
-//        let newToDo = ToDo(context: context)
-//        newToDo.id = UUID()
-//        newToDo.title = title
-//        newToDo.descriptionText = description
-//        newToDo.isCompleted = false
-//        newToDo.dateCreated = Date()
-//
-//        saveContext()
-//    }
-    
     func addToDo(title: String, description: String, priority: Int, dueDate: Date?) {
         let newToDo = ToDo(context: context)
         newToDo.id = UUID()

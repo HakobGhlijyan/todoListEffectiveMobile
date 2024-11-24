@@ -34,20 +34,6 @@ final class ToDoListPresenter: ObservableObject {
         fetchToDos() // Перезагружаем задачи с новым фильтром
     }
 
-//    func addToDo() {
-//        router.navigateToAddToDo { [weak self] title in
-//            self?.interactor.addToDo(title)
-//            self?.fetchToDos()
-//        }
-//    }
-    
-//    func addToDo() {
-//        router.navigateToAddToDo { [weak self] title, description in
-//            self?.interactor.addToDo(title: title, description: description)
-//            self?.fetchToDos()
-//        }
-//    }
-
     func addToDo() {
         router.navigateToAddToDo { [weak self] title, description, priority, dueDate in
             self?.interactor.addToDo(title: title, description: description, priority: priority, dueDate: dueDate)
@@ -72,28 +58,3 @@ final class ToDoListPresenter: ObservableObject {
         fetchToDos()
     }
 }
-
-
-/*
- 
- func delete(todo: ToDo) {
-     interactor.deleteToDo(todo) // Удаляем элемент через Interactor
-     fetchToDos() // Обновляем список задач
- }
- 
- List {
-     ForEach(presenter.todos, id: \.id) { todo in
-         HStack {
-             Text(todo.title ?? "Untitled")
-             Spacer()
-             Button(action: {
-                 presenter.delete(todo: todo) // Передаем объект для удаления
-             }) {
-                 Image(systemName: "trash")
-                     .foregroundColor(.red)
-             }
-         }
-     }
- }
- 
- */

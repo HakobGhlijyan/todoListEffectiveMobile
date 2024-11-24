@@ -167,5 +167,4 @@ struct ToDoListView: View {
 
 #Preview {
     Main()
-//        .preferredColorScheme(.dark)
 }
