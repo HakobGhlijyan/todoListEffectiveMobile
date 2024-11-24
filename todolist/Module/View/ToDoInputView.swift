@@ -16,6 +16,7 @@ struct ToDoInputView: View {
     @State private var dueDate: Date = Date()
     
     @State private var includeDueDate: Bool = false
+    @State private var includePriority: Bool = false
     
     @State private var showAlert: Bool = false
     var onSave: (String, String, Int, Date?) -> Void
@@ -28,23 +29,25 @@ struct ToDoInputView: View {
                 }
                 Section(header: Text("Description")) {
                     TextEditor(text: $description)
-                        .frame(height: 200)
+                        .frame(height: 50)
                 }
                 Section(header: Text("Priority")) {
-                    Picker("Priority", selection: $priority) {
-                        Text("Low").tag(1)
-                        Text("Medium").tag(2)
-                        Text("High").tag(3)
+                    Toggle("Include Priority", isOn: $includePriority)
+                    if includePriority {
+                        Picker("Priority", selection: $priority) {
+                            Text("Low").tag(1)
+                            Text("Medium").tag(2)
+                            Text("High").tag(3)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
                     }
-                    .pickerStyle(SegmentedPickerStyle())
+                    
                 }
-//                Section(header: Text("Due Date")) {
-//                    DatePicker("Select Due Date", selection: $dueDate, displayedComponents: [.date])
-//                }
                 Section(header: Text("Due Date")) {
                     Toggle("Include Due Date", isOn: $includeDueDate)
                     if includeDueDate {
-                        DatePicker("Select Due Date", selection: $dueDate, displayedComponents: [.date])
+                        DatePicker("Select Due Date", selection: $dueDate)
+                            .datePickerStyle(.graphical)
                     }
                 }
                 
@@ -57,7 +60,7 @@ struct ToDoInputView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
 //                        onSave(title, description, priority, dueDate)
-                        onSave(title, description, priority, includeDueDate ? dueDate : nil)
+                        onSave(title, description, includePriority ? priority : 0, includeDueDate ? dueDate : nil)
                         dismiss()
                     }
                     .disabled(title.isEmpty || description.isEmpty)
