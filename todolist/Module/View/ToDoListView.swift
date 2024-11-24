@@ -57,9 +57,6 @@ struct ToDoListView: View {
                                 }
                             }
                     }
-                    .onDelete { indexSet in
-                        presenter.delete(at: indexSet)
-                    }
                 }
             }
             .listStyle(.plain)
@@ -69,13 +66,13 @@ struct ToDoListView: View {
             .toolbar {
                 ToolbarItem(placement: .bottomBar) {
                     Menu {
-                        Button("Show All") {
+                        Button("Все") {
                             presenter.changeFilterOption(to: .all)
                         }
-                        Button("Show Completed") {
+                        Button("Завершено ") {
                             presenter.changeFilterOption(to: .completed)
                         }
-                        Button("Show Active") {
+                        Button("Активно") {
                             presenter.changeFilterOption(to: .active)
                         }
                     } label: {
