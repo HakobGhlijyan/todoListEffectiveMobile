@@ -15,6 +15,8 @@ struct ToDoInputView: View {
     @State private var priority: Int = 1 // Низкий приоритет по умолчанию
     @State private var dueDate: Date = Date()
     
+    @State private var includeDueDate: Bool = false
+    
     @State private var showAlert: Bool = false
     var onSave: (String, String, Int, Date?) -> Void
 
@@ -36,8 +38,14 @@ struct ToDoInputView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+//                Section(header: Text("Due Date")) {
+//                    DatePicker("Select Due Date", selection: $dueDate, displayedComponents: [.date])
+//                }
                 Section(header: Text("Due Date")) {
-                    DatePicker("Select Due Date", selection: $dueDate, displayedComponents: [.date])
+                    Toggle("Include Due Date", isOn: $includeDueDate)
+                    if includeDueDate {
+                        DatePicker("Select Due Date", selection: $dueDate, displayedComponents: [.date])
+                    }
                 }
                 
             }
@@ -48,7 +56,8 @@ struct ToDoInputView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(title, description, priority, dueDate)
+//                        onSave(title, description, priority, dueDate)
+                        onSave(title, description, priority, includeDueDate ? dueDate : nil)
                         dismiss()
                     }
                     .disabled(title.isEmpty || description.isEmpty)

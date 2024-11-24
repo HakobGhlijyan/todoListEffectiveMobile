@@ -59,12 +59,13 @@ final class ToDoListInteractor {
         newToDo.title = title
         newToDo.descriptionText = description
         newToDo.priority = Int16(priority)
-        newToDo.dueDate = dueDate
+        newToDo.dueDate = dueDate  // Может быть nil
         newToDo.isCompleted = false
         newToDo.dateCreated = Date()
 
         saveContext()
     }
+    
     
     func deleteToDo(_ todo: ToDo) {
         context.delete(todo)
