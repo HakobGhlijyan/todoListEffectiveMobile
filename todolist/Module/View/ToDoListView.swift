@@ -107,10 +107,16 @@ struct ToDoListView: View {
                     .foregroundStyle(todo.isCompleted ? Color.accentColor : Color.primary)
                 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(todo.title ?? "Your title")
-                        .font(.headline)
-                        .foregroundStyle(todo.isCompleted ? .secondary : .primary)
-                        .strikethrough(todo.isCompleted ? true : false)
+                    HStack(spacing: 0.0) {
+                        Text(todo.title ?? "Your title")
+                            .font(.headline)
+                            .foregroundStyle(todo.isCompleted ? .secondary : .primary)
+                            .strikethrough(todo.isCompleted ? true : false)
+                         Spacer()
+                         Text(priorityText(for: todo.priority))
+                             .font(.subheadline)
+                             .foregroundColor(priorityColor(for: todo.priority))
+                    }
                     
                     Text(todo.descriptionText ?? " Your descriprion text")
                         .font(.subheadline)
@@ -119,6 +125,12 @@ struct ToDoListView: View {
                     Text("Создана: \(todo.dateCreated ?? Date(), formatter: itemFormatter)")
                         .font(.footnote)
                         .foregroundColor(.gray)
+
+                    if let dueDate = todo.dueDate {
+                        Text("Дата завершения до: \(dueDate, formatter: itemFormatter)")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
                 }
                 .padding(.vertical, 12)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -130,8 +142,26 @@ struct ToDoListView: View {
             Divider()
                 .padding(.horizontal, 20)
         }
+        .background(.black.opacity(0.0001))
     }
 
+    private func priorityText(for priority: Int16) -> String {
+        switch priority {
+        case 1: return "Low"
+        case 2: return "Medium"
+        case 3: return "High"
+        default: return ""
+        }
+    }
+
+    private func priorityColor(for priority: Int16) -> Color {
+        switch priority {
+        case 1: return .green
+        case 2: return .orange
+        case 3: return .red
+        default: return .gray
+        }
+    }
 }
 
 

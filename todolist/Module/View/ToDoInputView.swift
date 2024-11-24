@@ -11,10 +11,13 @@ struct ToDoInputView: View {
     @Environment(\.dismiss) var dismiss
     @State private var title: String = ""
     @State private var description: String = ""
+    @State private var dateCreated: Date = Date()
+    @State private var priority: Int = 1 // Низкий приоритет по умолчанию
     @State private var dueDate: Date = Date()
-    @State private var showAlert: Bool = false
-    var onSave: (String, String) -> Void
     
+    @State private var showAlert: Bool = false
+    var onSave: (String, String, Int, Date?) -> Void
+
     var body: some View {
         NavigationView {
             Form {
@@ -22,11 +25,19 @@ struct ToDoInputView: View {
                     TextField("Enter title", text: $title)
                 }
                 Section(header: Text("Description")) {
-                    TextField("Enter description", text: $description)
+                    TextEditor(text: $description)
+                        .frame(height: 200)
                 }
-                Section(header: Text("Date")) {
-                    DatePicker("Date", selection: $dueDate)
-                        .datePickerStyle(.graphical)
+                Section(header: Text("Priority")) {
+                    Picker("Priority", selection: $priority) {
+                        Text("Low").tag(1)
+                        Text("Medium").tag(2)
+                        Text("High").tag(3)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
+                Section(header: Text("Due Date")) {
+                    DatePicker("Select Due Date", selection: $dueDate, displayedComponents: [.date])
                 }
                 
             }
@@ -37,7 +48,7 @@ struct ToDoInputView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(title, description)
+                        onSave(title, description, priority, dueDate)
                         dismiss()
                     }
                     .disabled(title.isEmpty || description.isEmpty)

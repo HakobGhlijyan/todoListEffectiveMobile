@@ -41,13 +41,20 @@ final class ToDoListPresenter: ObservableObject {
 //        }
 //    }
     
+//    func addToDo() {
+//        router.navigateToAddToDo { [weak self] title, description in
+//            self?.interactor.addToDo(title: title, description: description)
+//            self?.fetchToDos()
+//        }
+//    }
+
     func addToDo() {
-        router.navigateToAddToDo { [weak self] title, description in
-            self?.interactor.addToDo(title: title, description: description)
+        router.navigateToAddToDo { [weak self] title, description, priority, dueDate in
+            self?.interactor.addToDo(title: title, description: description, priority: priority, dueDate: dueDate)
             self?.fetchToDos()
         }
     }
-
+    
     func delete(at offsets: IndexSet) {
         for index in offsets {
             interactor.deleteToDo(todos[index])
