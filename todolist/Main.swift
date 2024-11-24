@@ -7,14 +7,12 @@
 
 import SwiftUI
 
-import SwiftUI
-
-struct ContentView: View {
+struct Main: View {
     var body: some View {
         ToDoListModule.build()
     }
 }
 
 #Preview {
-    ContentView()
+    Main()
 }
