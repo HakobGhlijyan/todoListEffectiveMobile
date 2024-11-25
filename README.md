@@ -1,5 +1,5 @@
-# Hello, My Music Temp App
-
+# Hello, Task Temp App
+## use coredata
 <div id="stat0" align="center">
   <img src="https://github.com/HakobGhlijyan/todoListEffectiveMobile/blob/main/screen/img.png"/ >
 </div>
