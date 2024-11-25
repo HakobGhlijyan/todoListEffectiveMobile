@@ -78,3 +78,10 @@ final class ToDoListInteractor {
     
 }
 
+//MARK: - метод для доступа к контексту, чтобы он был доступен для тестов
+extension ToDoListInteractor {
+    // Новый метод для доступа к context в тестах
+    func getContext() -> NSManagedObjectContext {
+        return context
+    }
+}

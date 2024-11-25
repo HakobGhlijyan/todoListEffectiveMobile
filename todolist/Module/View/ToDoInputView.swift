@@ -22,7 +22,7 @@ struct ToDoInputView: View {
         NavigationView {
             Form {
                 Section(header: Text("Задача")) {
-                    TextField("Задача", text: $title)
+                    TextField("", text: $title)
                 }
                 Section(header: Text("Описание")) {
                     TextEditor(text: $descriptionText)

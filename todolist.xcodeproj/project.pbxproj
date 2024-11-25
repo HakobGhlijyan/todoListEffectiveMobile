@@ -22,6 +22,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		342421172CF4C7F0003F17A6 /* viewForTesting */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = viewForTesting;
+			sourceTree = "<group>";
+		};
 		34B6F2032CF4BB6800B87A25 /* todolistTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = todolistTests;
@@ -58,6 +63,7 @@
 				34C444492CECFEC900E54A86 /* todolist */,
 				34B6F2032CF4BB6800B87A25 /* todolistTests */,
 				34C444482CECFEC900E54A86 /* Products */,
+				342421172CF4C7F0003F17A6 /* viewForTesting */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +115,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				342421172CF4C7F0003F17A6 /* viewForTesting */,
 				34C444492CECFEC900E54A86 /* todolist */,
 			);
 			name = todolist;
