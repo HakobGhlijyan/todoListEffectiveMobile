@@ -35,4 +35,39 @@ final class CoreDataManager: ObservableObject {
             }
         }
     }
+    
+    func loadInitialDataFromAPI() async throws {
+        let isFirstLaunch = !UserDefaults.standard.bool(forKey: "isDataLoaded")
+        guard isFirstLaunch else { return }
+
+        let todos = try await NetworkManager.shared.loadTodosFromAsync()
+        saveTodosToCoreData(todos)
+
+        UserDefaults.standard.set(true, forKey: "isDataLoaded")
+    }
+    
+    func saveTodosToCoreData(_ todos: [TodoItemDTO]) {
+        let context = CoreDataManager.shared.context
+
+        let existingIDs: Set<UUID> = {
+            let fetchRequest: NSFetchRequest<ToDo> = ToDo.fetchRequest()
+            fetchRequest.propertiesToFetch = ["id"]
+            let results = (try? context.fetch(fetchRequest)) ?? []
+            return Set(results.compactMap { $0.id })
+        }()
+
+        for todoDTO in todos where !existingIDs.contains(UUID()) {
+            let todo = ToDo(context: context)
+            todo.id = UUID()
+            todo.title = todoDTO.todo
+            todo.descriptionText = "No description available"
+            todo.priority = 1
+            todo.dueDate = nil
+            todo.isCompleted = todoDTO.completed
+            todo.dateCreated = Date()
+        }
+
+        CoreDataManager.shared.saveContext()
+    }
+    
 }

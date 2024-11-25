@@ -19,9 +19,10 @@ struct ToDoListView: View {
                         "Your Task",
                         systemImage: "list.bullet.clipboard",
                         description: Text(
-                            "Please Add new task"
+                          "Please Add new task"
                         )
                     )
+                    ProgressView()
                 } else {
                     ForEach(presenter.todos, id: \.id) { todo in
                         ToDoItemRow(todo: todo)
@@ -59,8 +60,10 @@ struct ToDoListView: View {
                     }
                 }
             }
-            .listStyle(.plain)
             .navigationTitle("Задачи")
+            .onAppear {
+                presenter.fetchToDos()  // Загружаем данные при появлении экрана
+            }
             .toolbarBackground(.visible, for: .bottomBar)
             .toolbarBackground(.ultraThickMaterial, for: .bottomBar)
             .toolbar {
@@ -109,10 +112,10 @@ struct ToDoListView: View {
                             .font(.headline)
                             .foregroundStyle(todo.isCompleted ? .secondary : .primary)
                             .strikethrough(todo.isCompleted ? true : false)
-                         Spacer()
-                         Text(priorityText(for: todo.priority))
-                             .font(.subheadline)
-                             .foregroundColor(priorityColor(for: todo.priority))
+                        Spacer()
+                        Text(priorityText(for: todo.priority))
+                            .font(.subheadline)
+                            .foregroundColor(priorityColor(for: todo.priority))
                     }
                     
                     Text(todo.descriptionText ?? " Your descriprion text")

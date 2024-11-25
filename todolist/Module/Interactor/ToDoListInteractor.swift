@@ -9,7 +9,7 @@ import CoreData
 
 final class ToDoListInteractor {
     private let context = CoreDataManager.shared.context
-
+    
     func fetchToDos(filter: FilterOption) -> [ToDo] {
         let request: NSFetchRequest<ToDo> = ToDo.fetchRequest()
         
@@ -21,7 +21,7 @@ final class ToDoListInteractor {
         case .active:
             request.predicate = NSPredicate(format: "isCompleted == false")
         }
-
+        
         request.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: false)]
         
         do {
@@ -41,10 +41,9 @@ final class ToDoListInteractor {
         newToDo.dueDate = dueDate  // Может быть nil
         newToDo.isCompleted = false
         newToDo.dateCreated = Date()
-
+        
         saveContext()
     }
-    
     
     func deleteToDo(_ todo: ToDo) {
         context.delete(todo)

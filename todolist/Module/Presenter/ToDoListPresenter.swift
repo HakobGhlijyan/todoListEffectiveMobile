@@ -18,22 +18,36 @@ final class ToDoListPresenter: ObservableObject {
     private var filterOption: FilterOption = .all // По умолчанию показываем все задачи
     private let interactor: ToDoListInteractor
     private let router: ToDoListRouter
-
+    
     init(interactor: ToDoListInteractor, router: ToDoListRouter) {
         self.interactor = interactor
         self.router = router
+        Task {
+            await loadDataFromAPI()
+        }
         fetchToDos()
     }
-
+    
     func fetchToDos() {
         todos = interactor.fetchToDos(filter: filterOption) // Передаем текущую опцию фильтра
     }
-
+    
+    func loadDataFromAPI() async {
+        do {
+            try await CoreDataManager.shared.loadInitialDataFromAPI() // Загружаем данные только при первом запуске
+            await MainActor.run {
+                self.fetchToDos() // Обновляем список задач после загрузки
+            }
+        } catch {
+            print("Ошибка загрузки данных из API: \(error)")
+        }
+    }
+    
     func changeFilterOption(to option: FilterOption) {
         filterOption = option
         fetchToDos() // Перезагружаем задачи с новым фильтром
     }
-
+    
     func addToDo() {
         router.navigateToAddToDo { [weak self] title, description, priority, dueDate in
             self?.interactor.addToDo(title: title, description: description, priority: priority, dueDate: dueDate)
@@ -45,14 +59,14 @@ final class ToDoListPresenter: ObservableObject {
         for index in offsets {
             interactor.deleteToDo(todos[index])
         }
-        fetchToDos()
+        fetchToDos() // Обновляем список после удаления
     }
     
     func delete(todo: ToDo) {
         interactor.deleteToDo(todo) // Удаляем элемент через Interactor
         fetchToDos() // Обновляем список задач
     }
-
+    
     func toggleCompletion(for todo: ToDo) {
         interactor.toggleCompletion(for: todo)
         fetchToDos()
