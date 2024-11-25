@@ -11,7 +11,7 @@ struct ToDoListView: View {
     @StateObject var presenter: ToDoListPresenter
     @State private var searchText: String = ""
     @State private var selectedTodo: ToDo?
-    
+        
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -42,6 +42,7 @@ struct ToDoListView: View {
                                         }
                                     }
                                     Button {
+                                        shareContent(shareTask(todo: todo))
                                         print("Поделиться")
                                     } label: {
                                         HStack {
@@ -65,7 +66,6 @@ struct ToDoListView: View {
             }
             .navigationTitle("Задачи")
             .onAppear {
-//                presenter.fetchToDos()
                 presenter.setupFetchedResultsController()
                 // Загружаем данные при появлении экрана
             }
@@ -99,7 +99,6 @@ struct ToDoListView: View {
                 }
             }
             .refreshable {
-//                presenter.fetchToDos()
                 presenter.setupFetchedResultsController()
             }
             .searchable(text: $searchText)
@@ -156,7 +155,14 @@ struct ToDoListView: View {
         }
         .background(.black.opacity(0.001))
     }
+}
 
+
+#Preview {
+    Main()
+}
+
+extension ToDoListView {
     private func priorityText(for priority: Int16) -> String {
         switch priority {
         case 1: return "Low"
@@ -174,9 +180,24 @@ struct ToDoListView: View {
         default: return .gray
         }
     }
-}
-
-
-#Preview {
-    Main()
+    
+    private func shareContent(_ content: String) {
+        let activityController = UIActivityViewController(activityItems: [content], applicationActivities: nil)
+        
+        if let rootVC = UIApplication.shared.windows.first?.rootViewController {
+            rootVC.present(activityController, animated: true, completion: nil)
+        }
+    }
+    
+    private func shareTask(todo: ToDo) -> String {
+        // Генерация содержимого для общего доступа
+        let taskDetails = """
+            Task: \(todo.title ?? "No Title")
+            Description: \(todo.descriptionText ?? "No Description")
+            Priority: \(priorityText(for: todo.priority))
+            Due Date: \(todo.dueDate?.formatted() ?? "No Due Date")
+            """
+        return taskDetails
+    }
+    
 }
