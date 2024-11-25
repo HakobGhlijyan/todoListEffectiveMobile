@@ -32,6 +32,7 @@ struct ToDoInputView: View {
                     Toggle("Приоритет", isOn: $includePriority)
                     if includePriority {
                         Picker("Приоритет", selection: $priority) {
+                            Text("Нет").tag(0)
                             Text("Низкий").tag(1)
                             Text("Средний").tag(2)
                             Text("Высокий").tag(3)

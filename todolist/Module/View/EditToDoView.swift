@@ -36,6 +36,15 @@ struct EditToDoView: View {
                     TextEditor(text: $descriptionText)
                         .frame(height: 80)
                 }
+                Section(header: Text("Приоритет ")) {
+                    Picker("Приоритет", selection: $priority) {
+                        Text("Нет").tag(0)
+                        Text("Низкий").tag(1)
+                        Text("Средний").tag(2)
+                        Text("Высокий").tag(3)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
                 Section(header: Text("Дата")) {
                     DatePicker(
                         "Дата выполнения",
