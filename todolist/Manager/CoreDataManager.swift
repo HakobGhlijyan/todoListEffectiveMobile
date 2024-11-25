@@ -7,7 +7,7 @@
 
 import CoreData
 
-final class CoreDataManager {
+final class CoreDataManager: ObservableObject {
     static let shared = CoreDataManager()
 
     private init() {}
