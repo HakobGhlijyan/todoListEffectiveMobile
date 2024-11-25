@@ -10,7 +10,7 @@ import SwiftUI
 struct ToDoInputView: View {
     @Environment(\.dismiss) var dismiss
     @State private var title: String = ""
-    @State private var description: String = ""
+    @State private var descriptionText: String = ""
     @State private var dateCreated: Date = Date()
     @State private var priority: Int = 1 // Низкий приоритет по умолчанию
     @State private var dueDate: Date = Date()
@@ -28,7 +28,7 @@ struct ToDoInputView: View {
                     TextField("Enter title", text: $title)
                 }
                 Section(header: Text("Description")) {
-                    TextEditor(text: $description)
+                    TextEditor(text: $descriptionText)
                         .frame(height: 50)
                 }
                 Section(header: Text("Priority")) {
@@ -59,10 +59,10 @@ struct ToDoInputView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(title, description, includePriority ? priority : 0, includeDueDate ? dueDate : nil)
+                        onSave(title, descriptionText, includePriority ? priority : 0, includeDueDate ? dueDate : nil)
                         dismiss()
                     }
-                    .disabled(title.isEmpty || description.isEmpty)
+                    .disabled(title.isEmpty || descriptionText.isEmpty)
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {

@@ -52,6 +52,14 @@ final class ToDoListInteractor {
         
         saveContext()
     }
+        
+    private func saveContext() {
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context: \(error)")
+        }
+    }
     
     func deleteToDo(_ todo: ToDo) {
         context.delete(todo)
@@ -63,7 +71,9 @@ final class ToDoListInteractor {
         saveContext()
     }
     
-    private func saveContext() {
-        CoreDataManager.shared.saveContext()
-    }
+    // Метод для обновления задачи
+        func updateToDo(_ todo: ToDo) {
+            saveContext() // Сохраняем изменения в Core Data
+        }
+
 }

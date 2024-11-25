@@ -20,4 +20,16 @@ final class ToDoListRouter {
             rootViewController.present(hostingController, animated: true)
         }
     }
+    func navigateToEditTodoView(todo: ToDo) {
+        let editView = EditToDoView(todo: todo, presenter: ToDoListPresenter(interactor: ToDoListInteractor(), router: self))
+        let hostingController = UIHostingController(rootView: editView)
+
+        if let rootViewController = UIApplication.shared.connectedScenes
+            .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController })
+            .first {
+            rootViewController.present(hostingController, animated: true)
+        }
+    }
 }
+
+

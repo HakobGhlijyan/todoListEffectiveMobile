@@ -10,6 +10,7 @@ import SwiftUI
 struct ToDoListView: View {
     @ObservedObject var presenter: ToDoListPresenter
     @State private var searchText: String = ""
+    @State private var selectedTodo: ToDo?
     
     var body: some View {
         NavigationStack {
@@ -24,7 +25,7 @@ struct ToDoListView: View {
                     )
                     ProgressView()
                 } else {
-                    ForEach(presenter.todos, id: \.id) { todo in
+                    ForEach(presenter.todos) { todo in
                         ToDoItemRow(todo: todo)
                             .onTapGesture {
                                 presenter.toggleCompletion(for: todo)
@@ -33,6 +34,7 @@ struct ToDoListView: View {
                                 VStack {
                                     Button {
                                         print("Редактировать")
+                                        presenter.navigateToEditTodoView(todo: todo)
                                     } label: {
                                         HStack {
                                             Image(systemName: "highlighter")
@@ -48,6 +50,7 @@ struct ToDoListView: View {
                                         }
                                     }
                                     Button(role: .destructive) {
+                                        print("Удалить")
                                         presenter.delete(todo: todo)
                                     } label: {
                                         HStack {
@@ -62,7 +65,8 @@ struct ToDoListView: View {
             }
             .navigationTitle("Задачи")
             .onAppear {
-                presenter.fetchToDos()  // Загружаем данные при появлении экрана
+                presenter.fetchToDos()
+                // Загружаем данные при появлении экрана
             }
             .toolbarBackground(.visible, for: .bottomBar)
             .toolbarBackground(.ultraThickMaterial, for: .bottomBar)
@@ -93,9 +97,12 @@ struct ToDoListView: View {
                     }
                 }
             }
+            .refreshable {
+                presenter.fetchToDos()
+            }
             .searchable(text: $searchText)
             .onChange(of: searchText) { newSearchText in
-                presenter.filterToDos(by: newSearchText) // Вызываем метод фильтрации при изменении текста
+                presenter.filterToDos(by: newSearchText)
             }
         }
     }
@@ -145,7 +152,7 @@ struct ToDoListView: View {
             Divider()
                 .padding(.horizontal, 20)
         }
-        .background(.black.opacity(0.0001))
+        .background(.black.opacity(0.001))
     }
 
     private func priorityText(for priority: Int16) -> String {

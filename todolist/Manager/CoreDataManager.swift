@@ -61,7 +61,7 @@ final class CoreDataManager: ObservableObject {
             todo.id = UUID()
             todo.title = todoDTO.todo
             todo.descriptionText = "No description available"
-            todo.priority = 1
+            todo.priority = 0
             todo.dueDate = nil
             todo.isCompleted = todoDTO.completed
             todo.dateCreated = Date()

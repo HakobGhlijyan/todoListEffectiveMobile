@@ -19,6 +19,7 @@ final class ToDoListPresenter: ObservableObject {
     private let interactor: ToDoListInteractor
     private let router: ToDoListRouter
     
+    
     private var searchText: String = "" // Текст поиска
     
     init(interactor: ToDoListInteractor, router: ToDoListRouter) {
@@ -28,24 +29,29 @@ final class ToDoListPresenter: ObservableObject {
             await loadDataFromAPI()
         }
         fetchToDos()
-    }
-   
-    // Обновленный метод для получения задач с учетом текста поиска
-        func fetchToDos() {
-            todos = interactor.fetchToDos(filter: filterOption, searchText: searchText)
-        }
 
-        // Новый метод для фильтрации по поисковому тексту
-        func filterToDos(by searchText: String) {
-            self.searchText = searchText
-            fetchToDos()
-        }
+    }
+    
+    // Обновленный метод для получения задач с учетом текста поиска
+    func fetchToDos() {
+        // Получаем задачи с учетом фильтров и поиска
+        let fetchedTodos = interactor.fetchToDos(filter: filterOption, searchText: searchText)
+        // Обновляем @Published свойство для перерисовки интерфейса
+        self.todos = fetchedTodos
+
+    }
+    
+    // Новый метод для фильтрации по поисковому тексту
+    func filterToDos(by searchText: String) {
+        self.searchText = searchText
+        fetchToDos()
+    }
     
     func loadDataFromAPI() async {
         do {
             try await CoreDataManager.shared.loadInitialDataFromAPI() // Загружаем данные только при первом запуске
             await MainActor.run {
-                self.fetchToDos() // Обновляем список задач после загрузки
+                self.fetchToDos()                                     // Обновляем список задач после загрузки
             }
         } catch {
             print("Ошибка загрузки данных из API: \(error)")
@@ -55,6 +61,7 @@ final class ToDoListPresenter: ObservableObject {
     func changeFilterOption(to option: FilterOption) {
         filterOption = option
         fetchToDos() // Перезагружаем задачи с новым фильтром
+
     }
     
     func addToDo() {
@@ -62,6 +69,12 @@ final class ToDoListPresenter: ObservableObject {
             self?.interactor.addToDo(title: title, description: description, priority: priority, dueDate: dueDate)
             self?.fetchToDos()
         }
+    }
+    
+    // Этот метод вызывается, чтобы перейти на экран редактирования задачи
+    func navigateToEditTodoView(todo: ToDo) {
+        router.navigateToEditTodoView(todo: todo)
+        self.fetchToDos()
     }
     
     func delete(at offsets: IndexSet) {
@@ -78,6 +91,12 @@ final class ToDoListPresenter: ObservableObject {
     
     func toggleCompletion(for todo: ToDo) {
         interactor.toggleCompletion(for: todo)
+        fetchToDos()
+    }
+    
+    // Метод для обновления задачи
+    func updateToDo(_ todo: ToDo) {
+        interactor.updateToDo(todo)
         fetchToDos()
     }
 }
