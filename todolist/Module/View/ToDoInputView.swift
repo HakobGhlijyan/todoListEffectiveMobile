@@ -53,14 +53,14 @@ struct ToDoInputView: View {
             .navigationBarTitle("Add New ToDo", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button("Сохранить") {
                         onSave(title, descriptionText, includePriority ? priority : 0, includeDueDate ? dueDate : nil)
                         dismiss()
                     }
                     .disabled(isValidInput())
                 }
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Отменить") {
                         dismiss()
                     }
                 }
