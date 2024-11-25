@@ -19,6 +19,8 @@ final class ToDoListPresenter: ObservableObject {
     private let interactor: ToDoListInteractor
     private let router: ToDoListRouter
     
+    private var searchText: String = "" // Текст поиска
+    
     init(interactor: ToDoListInteractor, router: ToDoListRouter) {
         self.interactor = interactor
         self.router = router
@@ -27,10 +29,17 @@ final class ToDoListPresenter: ObservableObject {
         }
         fetchToDos()
     }
-    
-    func fetchToDos() {
-        todos = interactor.fetchToDos(filter: filterOption) // Передаем текущую опцию фильтра
-    }
+   
+    // Обновленный метод для получения задач с учетом текста поиска
+        func fetchToDos() {
+            todos = interactor.fetchToDos(filter: filterOption, searchText: searchText)
+        }
+
+        // Новый метод для фильтрации по поисковому тексту
+        func filterToDos(by searchText: String) {
+            self.searchText = searchText
+            fetchToDos()
+        }
     
     func loadDataFromAPI() async {
         do {

@@ -94,6 +94,9 @@ struct ToDoListView: View {
                 }
             }
             .searchable(text: $searchText)
+            .onChange(of: searchText) { newSearchText in
+                presenter.filterToDos(by: newSearchText) // Вызываем метод фильтрации при изменении текста
+            }
         }
     }
     
