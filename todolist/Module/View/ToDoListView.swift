@@ -65,7 +65,8 @@ struct ToDoListView: View {
             }
             .navigationTitle("Задачи")
             .onAppear {
-                presenter.fetchToDos()
+//                presenter.fetchToDos()
+                presenter.setupFetchedResultsController()
                 // Загружаем данные при появлении экрана
             }
             .toolbarBackground(.visible, for: .bottomBar)
@@ -98,7 +99,8 @@ struct ToDoListView: View {
                 }
             }
             .refreshable {
-                presenter.fetchToDos()
+//                presenter.fetchToDos()
+                presenter.setupFetchedResultsController()
             }
             .searchable(text: $searchText)
             .onChange(of: searchText) { newSearchText in

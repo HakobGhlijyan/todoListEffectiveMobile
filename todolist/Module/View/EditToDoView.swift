@@ -75,3 +75,7 @@ struct EditToDoView: View {
         presenter.updateToDo(todo)
     }
 }
+
+#Preview {
+    Main()
+}
