@@ -30,20 +30,15 @@ struct EditToDoView: View {
         NavigationStack {
             Form {
                 Section(header: Text("Задача")) {
-                    TextField("Заголовок", text: $title)
-                        .textFieldStyle(.roundedBorder)
-                    TextField("Описание", text: $descriptionText)
-                        .textFieldStyle(.roundedBorder)
-                }
-                Section(header: Text("Задача")) {
                     TextEditor(text: $title)
-                        .frame(height: 50)
-                    TextEditor(text: $descriptionText)
-                        .frame(height: 150)
                 }
-                Section(header: Text("Задача")) {
+                Section(header: Text("Описание")) {
+                    TextEditor(text: $descriptionText)
+                        .frame(height: 80)
+                }
+                Section(header: Text("Дата")) {
                     DatePicker(
-                        "Due Date",
+                        "Дата выполнения",
                         selection: Binding(
                             get: { dueDate ?? Date() }, // Возвращаем current Date, если dueDate nil
                             set: { newDate in dueDate = newDate }
@@ -64,9 +59,10 @@ struct EditToDoView: View {
                         saveChanges()
                         dismiss()
                     }
-                    .disabled(title.isEmpty) // Запрещаем сохранить, если заголовок пустой
+                    .disabled(title.isEmpty || descriptionText.isEmpty) // Запрещаем сохранить, если заголовок пустой
                 }
             }
+            .scrollIndicators(.hidden)
         }
     }
     

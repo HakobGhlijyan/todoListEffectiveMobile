@@ -18,8 +18,6 @@ final class ToDoListPresenter: ObservableObject {
     private var filterOption: FilterOption = .all // По умолчанию показываем все задачи
     private let interactor: ToDoListInteractor
     private let router: ToDoListRouter
-    
-    
     private var searchText: String = "" // Текст поиска
     
     init(interactor: ToDoListInteractor, router: ToDoListRouter) {
@@ -37,8 +35,9 @@ final class ToDoListPresenter: ObservableObject {
         // Получаем задачи с учетом фильтров и поиска
         let fetchedTodos = interactor.fetchToDos(filter: filterOption, searchText: searchText)
         // Обновляем @Published свойство для перерисовки интерфейса
-        self.todos = fetchedTodos
-
+        DispatchQueue.main.async {
+            self.todos = fetchedTodos // Убедитесь, что создается новый массив
+        }
     }
     
     // Новый метод для фильтрации по поисковому тексту

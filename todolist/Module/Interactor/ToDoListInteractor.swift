@@ -72,8 +72,8 @@ final class ToDoListInteractor {
     }
     
     // Метод для обновления задачи
-        func updateToDo(_ todo: ToDo) {
-            saveContext() // Сохраняем изменения в Core Data
-        }
-
+    func updateToDo(_ todo: ToDo) {
+        saveContext() // Сохраняем изменения в Core Data
+    }
+    
 }

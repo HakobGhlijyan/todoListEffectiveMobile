@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ToDoListView: View {
-    @ObservedObject var presenter: ToDoListPresenter
+    @StateObject var presenter: ToDoListPresenter
     @State private var searchText: String = ""
     @State private var selectedTodo: ToDo?
     

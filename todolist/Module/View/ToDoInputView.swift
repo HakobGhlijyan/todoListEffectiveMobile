@@ -14,46 +14,40 @@ struct ToDoInputView: View {
     @State private var dateCreated: Date = Date()
     @State private var priority: Int = 1 // Низкий приоритет по умолчанию
     @State private var dueDate: Date = Date()
-    
     @State private var includeDueDate: Bool = false
     @State private var includePriority: Bool = false
-    
-    @State private var showAlert: Bool = false
     var onSave: (String, String, Int, Date?) -> Void
 
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Title")) {
-                    TextField("Enter title", text: $title)
+                Section(header: Text("Задача")) {
+                    TextField("Задача", text: $title)
                 }
-                Section(header: Text("Description")) {
+                Section(header: Text("Описание")) {
                     TextEditor(text: $descriptionText)
                         .frame(height: 50)
                 }
-                Section(header: Text("Priority")) {
-                    Toggle("Include Priority", isOn: $includePriority)
+                Section(header: Text("Приоритет ")) {
+                    Toggle("Приоритет", isOn: $includePriority)
                     if includePriority {
-                        Picker("Priority", selection: $priority) {
-                            Text("Low").tag(1)
-                            Text("Medium").tag(2)
-                            Text("High").tag(3)
+                        Picker("Приоритет", selection: $priority) {
+                            Text("Низкий").tag(1)
+                            Text("Средний").tag(2)
+                            Text("Высокий").tag(3)
                         }
                         .pickerStyle(SegmentedPickerStyle())
                     }
                     
                 }
-                Section(header: Text("Due Date")) {
-                    Toggle("Include Due Date", isOn: $includeDueDate)
+                Section(header: Text("Дата")) {
+                    Toggle("Дата окончания", isOn: $includeDueDate)
                     if includeDueDate {
                         DatePicker("Select Due Date", selection: $dueDate)
                             .datePickerStyle(.graphical)
                     }
                 }
                 
-            }
-            .alert(isPresented: $showAlert) {
-                Alert(title: Text("Error"), message: Text("Please fill all fields and select due date that is today or newer."))
             }
             .navigationBarTitle("Add New ToDo", displayMode: .inline)
             .toolbar {
@@ -62,7 +56,7 @@ struct ToDoInputView: View {
                         onSave(title, descriptionText, includePriority ? priority : 0, includeDueDate ? dueDate : nil)
                         dismiss()
                     }
-                    .disabled(title.isEmpty || descriptionText.isEmpty)
+                    .disabled(isValidInput())
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -71,6 +65,9 @@ struct ToDoInputView: View {
                 }
             }
         }
+    }
+    private func isValidInput() -> Bool {
+        title.isEmpty || descriptionText.isEmpty
     }
 }
 
